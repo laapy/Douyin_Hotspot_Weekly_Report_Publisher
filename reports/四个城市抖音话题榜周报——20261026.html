@@ -1,0 +1,1567 @@
+
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>全国抖音话题榜周报</title>
+        
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2d3d;
+            line-height: 1.75;
+        }
+        .container {
+            width: 1280px;
+            max-width: calc(100% - 36px);
+            margin: 0 auto;
+            padding: 24px 0 60px;
+        }
+        .hero {
+            background: linear-gradient(135deg, #153a8a 0%, #2f61f3 55%, #7aa6ff 100%);
+            color: #fff;
+            padding: 48px 42px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(33, 73, 183, 0.20);
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            margin: 0 0 12px 0;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        .hero p {
+            margin: 8px 0;
+            font-size: 16px;
+            opacity: 0.96;
+        }
+        .card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 8px 24px rgba(31, 45, 61, 0.08);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #1a2a52;
+            font-size: 26px;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #223b78;
+            font-size: 18px;
+        }
+        .toc ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .toc li {
+            margin: 10px 0;
+        }
+        .toc a {
+            text-decoration: none;
+            color: #2f61f3;
+            font-weight: 700;
+        }
+        .summary-box {
+            white-space: pre-wrap;
+            background: #f8fbff;
+            border: 1px solid #e6eefb;
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 15px;
+        }
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .city-badge {
+            background: #eef3ff;
+            color: #2855d6;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+        }
+        .metric-row {
+            margin-top: 14px;
+            margin-bottom: 4px;
+            color: #56657a;
+            font-size: 14px;
+        }
+        .topic-card {
+            background: #ffffff;
+            border: 1px solid #e9eef6;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 18px;
+        }
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .topic-title-wrap {
+            flex: 1;
+            min-width: 280px;
+        }
+        .topic-title-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+        }
+        .topic-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1b2a52;
+            margin: 0;
+        }
+        .topic-create-time-inline {
+            font-size: 13px;
+            color: #5e6b7c;
+            background: #f5f8fd;
+            border: 1px solid #e5ecf6;
+            border-radius: 999px;
+            padding: 5px 10px;
+        }
+        .rank-tag {
+            background: #2f61f3;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .topic-intro {
+            background: #f8fafc;
+            border-left: 4px solid #2f61f3;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 12px 0 16px 0;
+            white-space: pre-wrap;
+            font-size: 15px;
+        }
+        .raw-data-box {
+            background: #fcfdff;
+            border: 1px solid #e8edf5;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin: 10px 0 16px 0;
+        }
+        .raw-data-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #223b78;
+            margin-bottom: 8px;
+        }
+        .raw-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px 10px;
+        }
+        .raw-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 8px 10px;
+            border: 1px solid #edf2f8;
+        }
+        .raw-key {
+            font-size: 11px;
+            color: #6b7a90;
+            margin-bottom: 3px;
+        }
+        .raw-val {
+            font-size: 12px;
+            color: #1f2d3d;
+            word-break: break-all;
+            white-space: pre-wrap;
+            line-height: 1.55;
+        }
+        .gallery-two-cols {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+        .gallery-block {
+            background: #f8fafc;
+            border: 1px solid #e8edf5;
+            border-radius: 16px;
+            padding: 12px;
+        }
+        .gallery-block-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #223b78;
+            margin-bottom: 10px;
+        }
+        .img-card {
+            background: #ffffff;
+            border: 1px solid #eef2f8;
+            border-radius: 14px;
+            padding: 10px;
+        }
+        .img-card img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+        }
+        .img-name {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7a90;
+            word-break: break-all;
+        }
+        .link-row {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .link-row a {
+            color: #2f61f3;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .empty-box {
+            padding: 18px;
+            background: #fafafa;
+            border: 1px dashed #d7dee8;
+            border-radius: 14px;
+            color: #768398;
+        }
+        .footer {
+            text-align: center;
+            color: #7c889a;
+            font-size: 13px;
+            padding-top: 10px;
+        }
+        @media (max-width: 960px) {
+            .gallery-two-cols {
+                grid-template-columns: 1fr;
+            }
+            .raw-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 640px) {
+            .raw-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    
+    </head>
+    <body>
+        <div class="container">
+            <div class="hero">
+                <h1>全国抖音话题榜周报</h1>
+                <p>覆盖城市：杭州、青岛、厦门、武汉</p>
+                <p>生成时间：2026-10-26 22:11</p>
+            </div>
+
+            <div class="card toc">
+                <h2>目录</h2>
+                <ul>
+                    <li><a href="#national-summary">本周总述</a></li>
+                    <li><a href="#杭州">杭州 城市周报</a></li><li><a href="#青岛">青岛 城市周报</a></li><li><a href="#厦门">厦门 城市周报</a></li><li><a href="#武汉">武汉 城市周报</a></li>
+                </ul>
+            </div>
+
+            <div class="card" id="national-summary">
+                <h2>本周总述</h2>
+                <div class="summary-box">本周全国抖音本地生活相关热点主要集中在实景娱乐打卡、文旅休闲出游、特色商户探店、便民生活服务四类核心消费场景，整体传播热度呈稳步上涨态势。内容方向呈现明显区域差异，杭州、青岛、厦门的热门内容以适配年轻群体、游客及亲子家庭的休闲文旅、冬季养生类消费内容为主，武汉则以贴合本地刚需的夜间社交娱乐、家装服务类内容最受用户关注。</div>
+            </div>
+
+            
+    <section class="card" id="杭州">
+        <div class="city-header">
+            <h2>杭州 城市周报</h2>
+            <span class="city-badge">杭州</span>
+        </div>
+
+        <div class="summary-box">本周杭州抖音本地内容集中在沉浸式恐怖屋、密室逃脱类实景娱乐的打卡测评，秋冬暖身汤泉门店的休闲消费，特色观景门店探店，以及景区、商圈、特色餐饮的真实游玩消费攻略分享。这类内容既适配本地年轻群体社交解压、多元休闲需求，也契合来杭游客对无滤镜实用本地消费参考的需求，叠加用户自发传播、商家团购优惠及杭州本身的文旅热度带动，整体关注度持续走高。</div>
+        <div class="metric-row">共收录 5 个话题</div>
+
+        
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">我们的恐怖屋杭州店</div>
+                    <span class="topic-create-time-inline">创建时间：2026-02-10 21:09:47</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 8</div>
+        </div>
+
+        <div class="topic-intro">我们的恐怖屋杭州店相关内容围绕门店实景恐怖体验打卡、游玩攻略分享、到店消费测评展开，属于本地线下休闲娱乐消费，覆盖年轻群体好友组队休闲解压的线下玩乐场景。该话题热度提升主要源于杭州本地年轻群体对沉浸式实景娱乐类项目的消费偏好，加上大量用户自发分享的打卡体验、探店内容的传播带动。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">我们的恐怖屋杭州店</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">8</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">481000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">238</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">10685000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">45000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7605439468417320969" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">杭州密室逃脱推荐</div>
+                    <span class="topic-create-time-inline">创建时间：2026-01-03 08:00:13</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 16</div>
+        </div>
+
+        <div class="topic-intro">杭州本地密室逃脱类线下实景娱乐消费相关推荐内容，涵盖门店探店、体验测评、主题玩法介绍等方向，适配年轻群体休闲社交、好友聚会等线下消费场景。这类内容精准契合本地年轻群体对沉浸式互动休闲娱乐的消费偏好，大量真实的体验分享为有线下娱乐需求的用户提供了实用参考，推动话题热度持续提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">杭州密室逃脱推荐</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">16</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">16000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">270</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">1746000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">6465</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7591134611921438758" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">杭州热门汤泉</div>
+                    <span class="topic-create-time-inline">创建时间：2026-01-07 01:20:15</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 18</div>
+        </div>
+
+        <div class="topic-intro">杭州本地各类热门汤泉门店推出涵盖沐浴休憩、休闲娱乐、配套餐饮的到店体验活动，属于本地休闲娱乐消费类内容，覆盖市民工作日解压、周末好友聚会、亲子休闲等多元场景。秋冬季节气温走低，市民及来杭游客对暖身放松类休闲消费需求明显提升，叠加商家推出的专属抖音团购优惠，推动话题热度持续走高。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">杭州热门汤泉</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">18</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">13000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">492</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">22699000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">46000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7592516076206819374" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">在homeless看杭州</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-26 21:59:41</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 69</div>
+        </div>
+
+        <div class="topic-intro">杭州本地消费者前往homeless线下门店休闲打卡，依托店内的独特视角观赏杭州城市风貌，属于本地休闲探店类消费场景。这类兼顾休闲体验和独特观景视角的内容契合年轻打卡群体的偏好，叠加杭州城市景观的高关注度，推动话题热度持续提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">在homeless看杭州</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">69</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">1305</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">7</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">423000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">60000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7621764680075348019" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">杭州真实感受</div>
+                    <span class="topic-create-time-inline">创建时间：2026-01-10 04:59:32</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 74</div>
+        </div>
+
+        <div class="topic-intro">来杭游客及本地市民分享杭州景区、商圈、特色餐饮等各类本地生活场景的游玩、消费真实体验，内容涵盖出行避坑、小众目的地推荐、日常休闲打卡等实用参考。近期杭州文旅消费热度持续走高，用户对非营销、无滤镜的真实本地消费参考内容需求上涨，带动该类分享内容关注度不断提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">杭州真实感受</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">74</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">1217</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">64</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">1393000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">22000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7593685749199800362" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    </section>
+    
+    <section class="card" id="青岛">
+        <div class="city-header">
+            <h2>青岛 城市周报</h2>
+            <span class="city-badge">青岛</span>
+        </div>
+
+        <div class="summary-box">本周青岛相关热点内容主要覆盖潮玩社交场所打卡、追星向专辑店探店、核心景区出游攻略、老虎主题文旅互动活动、日系小众杂货铺探店等消费、游玩及打卡方向。
+这类内容精准匹配了本地年轻群体、亲子家庭、来青游客的多元休闲需求，叠加出游旺季流量、热门场景自带的传播属性加持，整体热度攀升明显。</div>
+        <div class="metric-row">共收录 5 个话题</div>
+
+        
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">青岛momoclub</div>
+                    <span class="topic-create-time-inline">创建时间：2026-04-18 12:28:04</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 9</div>
+        </div>
+
+        <div class="topic-intro">围绕青岛MOMO CLUB产出的到店打卡、玩乐体验、好友聚会分享内容，属于本地年轻群体喜爱的夜间休闲娱乐类线下消费场景。这类带有潮玩社交属性的内容契合青岛本地年轻人的休闲需求，大量用户自发分享的真实体验内容带动了相关内容热度持续走高。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">青岛momoclub</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">9</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">9207</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">7</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">107000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">15000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7630151817381873707" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">青岛中山路专辑店</div>
+                    <span class="topic-create-time-inline">创建时间：2026-01-24 02:13:36</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 10</div>
+        </div>
+
+        <div class="topic-intro">青岛中山路专辑店相关内容围绕年轻消费者探店选购偶像实体专辑、周边衍生商品的线下文娱消费展开，属于城市潮玩打卡类的休闲消费场景。这类内容热度提升既契合了本地及来青旅游的年轻追星群体、K-pop爱好者的消费偏好，也得益于中山路作为青岛老城区热门打卡地的流量加持带动相关内容传播。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">青岛中山路专辑店</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">10</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">33000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">25</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">759000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">30000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7598838298950846499" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">青岛旅游资源</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-29 03:38:17</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 39</div>
+        </div>
+
+        <div class="topic-intro">青岛本地围绕崂山、五四广场、台东步行街等核心旅游资源展开的出游攻略、探店体验、行程规划分享类内容，覆盖外地游客来青度假、本地市民短途休闲等消费场景。春夏时节青岛进入出游旺季，本地及外来游客的出行需求持续攀升，相关内容能够充分匹配不同人群的出游决策参考需求，热度持续走高。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">青岛旅游资源</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">39</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">1488</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">7</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">2450000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">350000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7622594104397809698" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">万兽之王青岛</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-07 10:13:41</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 44</div>
+        </div>
+
+        <div class="topic-intro">青岛本地文旅场所推出的观赏“万兽之王”老虎相关主题互动体验活动，属于本地文旅休闲消费范畴，适配亲子出游、周末短途休闲等多种场景。这类趣味十足的野生动物相关内容契合亲子家庭、年轻游客的休闲偏好，叠加假期出游需求持续释放推动话题热度不断提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">万兽之王青岛</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">44</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">1318</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">141</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">1095000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">7769</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7614547589156833306" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">青岛日系杂货铺</div>
+                    <span class="topic-create-time-inline">创建时间：2026-01-10 23:05:57</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 46</div>
+        </div>
+
+        <div class="topic-intro">青岛本地各类日系风格杂货铺的线下探店、好物选购、场景打卡，是面向年轻消费群体的休闲探店类本地生活消费内容。这类内容贴合年轻人喜爱淘小众好物、拍摄氛围感打卡照片的偏好，相关日常分享内容的持续产出推动话题热度不断走高。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">青岛日系杂货铺</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">46</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">1334</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">2</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">54000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">27000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7593965805209913395" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    </section>
+    
+    <section class="card" id="厦门">
+        <div class="city-header">
+            <h2>厦门 城市周报</h2>
+            <span class="city-badge">厦门</span>
+        </div>
+
+        <div class="summary-box">本周厦门相关热门内容集中在猩猩地堡到店打卡、建发湾悦城一起生活节消费、天竺山景区短途出游攻略、特色海水汤泉体验、兰亭汇足浴养生门店探店这些本地消费及休闲游玩方向。
+这些内容精准契合年轻群体休闲放松、市民日常消费、大众近郊游及冬季养生的多元需求，叠加用户自发打卡分享和活动优惠加持，整体热度持续攀升。</div>
+        <div class="metric-row">共收录 5 个话题</div>
+
+        
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">厦门猩猩地堡</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-09 11:53:00</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 21</div>
+        </div>
+
+        <div class="topic-intro">厦门猩猩地堡相关话题聚焦厦门本地线下休闲娱乐消费场景，内容以消费者到店打卡、游玩体验的分享为主。这类内容契合本地年轻群体的休闲娱乐需求，大量用户自发的打卡分享推动话题热度持续走高。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">厦门猩猩地堡</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">21</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">2153</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">18</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">142000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">7869</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7615298922843473972" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">厦门建发湾悦城一起生活节</div>
+                    <span class="topic-create-time-inline">创建时间：2026-04-15 22:37:31</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 36</div>
+        </div>
+
+        <div class="topic-intro">厦门建发湾悦城举办的一起生活节是面向厦门本地消费者的商圈主题消费活动，覆盖购物、餐饮、亲子玩乐等多类线下消费场景。本次活动配套了专属消费折扣、趣味互动玩法等内容，贴合本地市民日常休闲消费偏好，热度持续攀升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">厦门建发湾悦城一起生活节</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">36</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">1097</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">26</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">294000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">11000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7629195966460987398" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">厦门天竺山游玩攻略</div>
+                    <span class="topic-create-time-inline">创建时间：2026-04-11 21:14:18</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 114</div>
+        </div>
+
+        <div class="topic-intro">厦门天竺山景区的游玩攻略相关内容，涵盖景区游览路线规划、打卡点位推荐、配套消费选择等，服务本地市民及来厦游客的短途休闲出游消费场景。近期大众短途近郊游需求持续攀升，这类可直接复用的实用出行指引契合出游人群的事前参考需求，推动话题热度不断提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">厦门天竺山游玩攻略</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">114</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">145</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">2</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">8515</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">4257</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7627690319034714166" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">厦门泡海水汤泉</div>
+                    <span class="topic-create-time-inline">创建时间：2026-04-02 05:46:53</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 153</div>
+        </div>
+
+        <div class="topic-intro">厦门海水汤泉是面向本地居民及来厦游客的特色休闲养生消费项目，适配周末短途出游、亲友小聚、康养休闲等多种场景。近期冬季气温走低，消费者对温泉类休闲项目的需求上升，加上海水汤泉的差异化特色契合大众冬季休闲养生的偏好，相关内容热度持续提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">厦门泡海水汤泉</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">153</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">89</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">3</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">19000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">6334</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7624111422040983578" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">厦门兰亭汇</div>
+                    <span class="topic-create-time-inline">创建时间：2026-04-11 09:04:43</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 159</div>
+        </div>
+
+        <div class="topic-intro">厦门兰亭汇相关内容围绕厦门本地这家主打足浴按摩、休闲养生的线下门店的到店消费体验、专属优惠活动、特色服务项目等本地生活服务消费场景展开。大量本地消费者自发发布探店打卡、消费测评内容，契合当下年轻群体对休闲放松类本地生活服务的消费需求，推动相关讨论热度不断走高。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">厦门兰亭汇</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">159</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">81</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">4</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">9809</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">2452</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7627502230094972970" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    </section>
+    
+    <section class="card" id="武汉">
+        <div class="city-header">
+            <h2>武汉 城市周报</h2>
+            <span class="city-badge">武汉</span>
+        </div>
+
+        <div class="summary-box">本周武汉本地热门内容集中在夜间酒饮休闲、线下K歌竞技活动及实用家装服务三类，涵盖酒吧探店打卡、全城酒鬼地图漫游、歌王争霸活动参与、适配本地户型的家装干货分享等消费与生活服务相关内容。这些内容既契合了年轻群体对夜间社交、休闲娱乐的偏好，也贴合了近期新房集中交付、旧房翻新需求上涨的用户刚需，大量真实体验分享进一步推动了话题热度走高。</div>
+        <div class="metric-row">共收录 5 个话题</div>
+
+        
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">武汉solo酒吧</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-17 09:17:28</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 19</div>
+        </div>
+
+        <div class="topic-intro">武汉SOLO酒吧相关内容覆盖本地夜间休闲娱乐消费场景，集中展现网友到店探店打卡、现场氛围体验、酒水消费、主题活动参与等各类分享。本地年轻群体对夜间社交放松场景的需求持续走高，大量真实到店体验的分享内容引发用户广泛讨论互动，推动该话题热度不断提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">武汉solo酒吧</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">19</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">6952</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">163</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">506000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">3107</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7618228476609071142" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">武汉全城酒鬼地图</div>
+                    <span class="topic-create-time-inline">创建时间：2026-04-03 04:30:43</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 25</div>
+        </div>
+
+        <div class="topic-intro">武汉全城酒鬼地图是覆盖武汉各区域特色酒吧、精酿馆、鸡尾酒吧的酒饮消费打卡指南，面向本地爱酒人群及来汉游客，适配夜间休闲、好友小聚、城市漫游等线下消费场景。这一内容热度提升契合了当下年轻人热衷城市特色消费、乐于线下打卡的偏好，大量本地博主发布的打卡体验内容也进一步带动了用户的参与热情。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">武汉全城酒鬼地图</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">25</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">6283</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">7</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">262000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">37000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7624462872759765043" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">武汉星聚会歌王争霸</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-23 13:12:52</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 45</div>
+        </div>
+
+        <div class="topic-intro">武汉星聚会KTV举办歌王争霸K歌竞技活动，属于面向本地消费者的线下休闲娱乐消费场景。该活动契合武汉本地年轻群体的休闲社交偏好，较强的互动属性和竞技趣味性吸引大量用户自发打卡分享推动热度上涨。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">武汉星聚会歌王争霸</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">45</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">2866</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">34</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">585000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">17000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7620515665668999195" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">offer酒馆武汉</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-04 04:51:11</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 47</div>
+        </div>
+
+        <div class="topic-intro">武汉本地围绕offer酒馆展开的到店打卡、酒品体验、门店活动分享内容，属于面向年轻群体的夜间休闲社交类线下酒水消费场景。武汉年轻消费群体对城市酒馆探店、休闲社交类内容偏好度高，大量用户自发分享到店体验内容推动话题热度持续提升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">offer酒馆武汉</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">47</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">2281</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">58</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">366000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">6303</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7613351073570359331" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    <div class="topic-card">
+        <div class="topic-header">
+            <div class="topic-title-wrap">
+                <div class="topic-title-line">
+                    <div class="topic-title">武汉设计师肖肖</div>
+                    <span class="topic-create-time-inline">创建时间：2026-03-28 22:27:34</span>
+                </div>
+            </div>
+            <div class="rank-tag">TOP 48</div>
+        </div>
+
+        <div class="topic-intro">武汉设计师肖肖发布适配武汉本地常见户型的家装设计、旧房改造干货内容，为有装修需求的本地消费者提供设计咨询、门店对接的家装类本地生活服务。近期武汉新房集中交付叠加旧房翻新需求上涨，贴合本地实际的实用家装内容契合用户刚需，推动话题热度持续攀升。</div>
+
+        <div class="raw-data-box"><div class="raw-data-title">话题详细数据</div><div class="raw-grid">
+            <div class="raw-item">
+                <div class="raw-key">话题名称</div>
+                <div class="raw-val">武汉设计师肖肖</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">榜单排名</div>
+                <div class="raw-val">48</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">热度值</div>
+                <div class="raw-val">2117</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">视频量</div>
+                <div class="raw-val">24</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">播放量</div>
+                <div class="raw-val">281000</div>
+            </div>
+        
+            <div class="raw-item">
+                <div class="raw-key">稿均播放量</div>
+                <div class="raw-val">12000</div>
+            </div>
+        </div></div>
+
+        <div class="link-row"><a href="https://douhot.douyin.com/topic/detail?active_tab=topic_detail&amp;topic_id=7622513690226460687" target="_blank">话题网站</a></div>
+
+        
+    <div class="gallery-two-cols">
+        <div class="gallery-block">
+            <div class="gallery-block-title">点赞观众画像</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+        <div class="gallery-block">
+            <div class="gallery-block-title">热度趋势</div>
+            <div class="empty-box">暂无对应截图</div>
+        </div>
+    </div>
+    
+    </div>
+    
+    </section>
+    
+
+            <div class="footer">
+                本报告由自动化脚本生成 ｜ AI 模型：doubao-seed-2-0-pro-260215
+            </div>
+        </div>
+    </body>
+    </html>
+    
